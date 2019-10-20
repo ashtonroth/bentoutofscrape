@@ -2,8 +2,9 @@ var express = require("express");
 var bodyParser = require("body-parser");
 var logger = require("morgan");
 var mongoose = require("mongoose");
-var hbs = require("handlebars");
+var exphbs = require("express-handlebars");
 var path = require("path");
+
 
 // Our scraping tools
 // Axios is a promised-based http library, similar to jQuery's Ajax method
@@ -37,8 +38,7 @@ app.use(bodyParser.urlencoded({
 // Make public a static dir
 app.use(express.static("public"));
 
-// Set Handlebars.
-var exphbs = require("express-handlebars");
+
 
 app.engine("handlebars", exphbs({
     defaultLayout: "main",
@@ -46,8 +46,9 @@ app.engine("handlebars", exphbs({
 }));
 app.set("view engine", "handlebars");
 
-
 var db = mongoose.connection;
+
+
 
 // Show any mongoose errors
 db.on("error", function(error) {
@@ -144,7 +145,7 @@ app.get("/scrape", function(req, res) {
 // This will get the articles we scraped from the mongoDB
 app.get("/articles", function(req, res) {
 // Grab every doc in the Articles array
-Article.find({}, function(error, doc) {
+db.Article.find({}, function(error, doc) {
 // Log any errors
 if (error) {
   console.log(error);
